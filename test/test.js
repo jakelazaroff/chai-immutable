@@ -5,6 +5,7 @@ if (!chai) {
   var chai = require('chai');
   var chaiImmutable = require('../chai-immutable');
   var Immutable = require('immutable');
+  var otherImmutable = require('../node_modules/immutable/dist/immutable.min.js');
 
   chai.use(chaiImmutable);
   typeEnv = 'Node.js';
@@ -45,6 +46,10 @@ describe('chai-immutable (' + typeEnv + ')', function () {
     list: List.of(42)
   });
 
+  if (typeEnv === 'Node.js') {
+    var otherImmutableList = otherImmutable.List.of(1, 2, 3);
+  }
+
   describe('BDD interface', function () {
     describe('empty property', function () {
       it('should pass given an empty collection', function () {
@@ -68,6 +73,12 @@ describe('chai-immutable (' + typeEnv + ')', function () {
       it('should fail using `not` given an empty collection', function () {
         fail(function () { expect(new List()).to.not.be.empty; });
       });
+
+      if (typeEnv === 'Node.js') {
+        it('should work if using different copies of Immtuable', function () {
+          expect(otherImmutable.List()).to.be.empty;
+        });
+      }
     });
 
     describe('equal method', function () {
@@ -162,6 +173,12 @@ describe('chai-immutable (' + typeEnv + ')', function () {
         fail(function () { expect(deepMap).to.not.eqls(sameDeepMap); });
         fail(function () { expect(deepMap).to.not.deep.equal(sameDeepMap); });
       });
+
+      if (typeEnv === 'Node.js') {
+        it('should work if using different copies of Immtuable', function () {
+          expect(otherImmutableList).to.equal(otherImmutable.List.of(1, 2, 3));
+        });
+      }
     });
 
     describe('include method', function () {
@@ -376,6 +393,12 @@ describe('chai-immutable (' + typeEnv + ')', function () {
         fail(function () { expect(map).to.contain.key('z'); });
         fail(function () { expect(obj).to.contain.key('z'); });
       });
+
+      if (typeEnv === 'Node.js') {
+        it('should work if using different copies of Immtuable', function () {
+          expect(otherImmutable.Map({ x: 1 })).to.have.key('x');
+        });
+      }
     });
 
     describe('size method', function () {
@@ -399,6 +422,12 @@ describe('chai-immutable (' + typeEnv + ')', function () {
       it('should fail using `not` given the right size', function () {
         fail(function () { expect(list3).to.not.have.size(3); });
       });
+
+      if (typeEnv === 'Node.js') {
+        it('should work if using different copies of Immtuable', function () {
+          expect(otherImmutableList).to.have.size(3);
+        });
+      }
     });
 
     describe('size property', function () {
@@ -530,6 +559,12 @@ describe('chai-immutable (' + typeEnv + ')', function () {
       it('most should fail using `not` given a bad max size', function () {
         fail(function () { expect(list3).to.not.have.size.of.at.most(42); });
       });
+
+      if (typeEnv === 'Node.js') {
+        it('should work if using different copies of Immtuable', function () {
+          expect(otherImmutableList).to.have.size.above(2);
+        });
+      }
     });
   });
 
@@ -568,6 +603,12 @@ describe('chai-immutable (' + typeEnv + ')', function () {
       it('should fail given deeply different values', function () {
         fail(function () { assert.equal(deepMap, differentDeepMap); });
       });
+
+      if (typeEnv === 'Node.js') {
+        it('should work if using different copies of Immtuable', function () {
+          assert.equal(otherImmutableList, otherImmutable.List.of(1, 2, 3));
+        });
+      }
     });
 
     describe('notEqual assertion', function () {
@@ -595,6 +636,12 @@ describe('chai-immutable (' + typeEnv + ')', function () {
       it('should fail given deeply equal values', function () {
         fail(function () { assert.notEqual(deepMap, sameDeepMap); });
       });
+
+      if (typeEnv === 'Node.js') {
+        it('should work if using different copies of Immtuable', function () {
+          assert.notEqual(otherImmutableList, otherImmutable.List.of());
+        });
+      }
     });
 
     describe('unoverridden strictEqual and deepEqual assertions', function () {
@@ -617,6 +664,13 @@ describe('chai-immutable (' + typeEnv + ')', function () {
         fail(function () { assert.strictEqual(deepMap, differentDeepMap); });
         fail(function () { assert.deepEqual(deepMap, differentDeepMap); });
       });
+
+      if (typeEnv === 'Node.js') {
+        it('should work if using different copies of Immtuable', function () {
+          assert.strictEqual(otherImmutableList, otherImmutable.List.of(1, 2, 3));
+          assert.deepEqual(otherImmutableList, otherImmutable.List.of(1, 2, 3));
+        });
+      }
     });
 
     describe('unoverridden notStrictEqual and notDeepEqual assertions', function () {
@@ -639,6 +693,13 @@ describe('chai-immutable (' + typeEnv + ')', function () {
         fail(function () { assert.notStrictEqual(deepMap, sameDeepMap); });
         fail(function () { assert.notDeepEqual(deepMap, sameDeepMap); });
       });
+
+      if (typeEnv === 'Node.js') {
+        it('should work if using different copies of Immtuable', function () {
+          assert.notStrictEqual(otherImmutableList, otherImmutable.List());
+          assert.notDeepEqual(otherImmutableList, otherImmutable.List());
+        });
+      }
     });
 
     describe('sizeOf assertion', function () {
@@ -653,6 +714,12 @@ describe('chai-immutable (' + typeEnv + ')', function () {
       it('should fail given the wrong size', function () {
         fail(function () { assert.sizeOf(list3, 42); });
       });
+
+      if (typeEnv === 'Node.js') {
+        it('should work if using different copies of Immtuable', function () {
+          assert.sizeOf(otherImmutableList, 3);
+        });
+      }
     });
   });
 });
